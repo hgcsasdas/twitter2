@@ -1,7 +1,6 @@
 const path = require('path');
 const exphbs = require('express-handlebars');
 
-
 const morgan = require('morgan');
 const multer = require('multer');
 const express = require('express');
@@ -13,9 +12,8 @@ const exp = require('constants');
 module.exports = app => {
 
     app.set('port', process.env.PORT || 3000);
-
     app.set('views', path.join(__dirname, 'views'));
-    app.engine('.hbs', exphbs({
+    app.engine('/.hbs', exphbs.engine({
         defaultLayout: 'main',
         partialsDir: path.join(app.get('views'), 'partials'),
         layoutsDir: path.join(app.get('views'), 'layouts'),
@@ -23,11 +21,11 @@ module.exports = app => {
         helpers: require('./helpers')
     }));
 
-    app.set('view engine', 'hbs');
+    app.set('view engine', '.hbs');
 
     //middlewares
     app.use(morgan('dev'))
-    app.use(multer({dest: path.join(--dirname, '../upload/temp')}).single('image'));
+    app.use(multer({dest: path.join(__dirname, '../upload/temp')}).single('image'));
     app.use(express.urlencoded({extended: false}));
     app.use(express.json());
 
