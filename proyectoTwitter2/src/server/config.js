@@ -1,5 +1,15 @@
 const path = require('path');
 const exphbs = require('express-handlebars');
+
+
+const morgan = require('morgan');
+const multer = require('multer');
+const express = require('express');
+const routes = require('../public/routes/index');
+
+const { dirname } = require('path');
+const exp = require('constants');
+
 module.exports = app => {
 
     app.set('port', process.env.PORT || 3000);
@@ -14,6 +24,15 @@ module.exports = app => {
     }));
 
     app.set('view engine', 'hbs');
+
+    //middlewares
+    app.use(morgan('dev'))
+    app.use(multer({dest: path.join(--dirname, '../upload/temp')}).single('image'));
+    app.use(express.urlencoded({extended: false}));
+    app.use(express.json());
+
+    //route
+    routes(app);
 
     return app;
 }    
