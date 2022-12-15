@@ -4,16 +4,17 @@ const exphbs = require('express-handlebars');
 const morgan = require('morgan');
 const multer = require('multer');
 const express = require('express');
-const routes = require('../public/routes/index');
+const routes = require('../routes/index');
 
 const { dirname } = require('path');
 const exp = require('constants');
+const errorHandler = require('errorhandler');
 
 module.exports = app => {
 
     app.set('port', process.env.PORT || 3000);
-    app.set('views', path.join(__dirname, 'views'));
-    app.engine('/.hbs', exphbs.engine({
+    app.set('views', path.join(__dirname, '../views'));
+    app.engine('.hbs', exphbs.engine({
         defaultLayout: 'main',
         partialsDir: path.join(app.get('views'), 'partials'),
         layoutsDir: path.join(app.get('views'), 'layouts'),
@@ -29,8 +30,16 @@ module.exports = app => {
     app.use(express.urlencoded({extended: false}));
     app.use(express.json());
 
-    //route
+    //routes
     routes(app);
+
+    //static files
+    app.use('/public', express.static(path.join(__dirname, '../public')));
+
+    //erohandler
+    if ('development' === app.get('env')){
+        app.use(errorHandler) 
+    }
 
     return app;
 }    
