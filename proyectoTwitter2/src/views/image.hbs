@@ -1,0 +1,19 @@
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h2>{{image.title}}</h2>
+        <button class="btn btn-danger" id="btn-delete" data-id="{{image._id}}">
+            <i class="fa fa-times"></i> Eliminar
+        </button>
+    </div>
+    <div class="card-body">
+        <p>{{image.description}}</p>
+        <div class="text-center">
+            <img src="/public/upload/{{image.filename}}" class="img-fluid">
+        </div>
+    </div>
+    <div class="card-footer d-flex justify-content-between align-items-center">
+        <button class="btn btn-success" id="btn-like" data-id="{{image.filename}}">
+            <i class="fas fa-thumbs-up"></i>
+        </button>
+    </div>
+</div>
