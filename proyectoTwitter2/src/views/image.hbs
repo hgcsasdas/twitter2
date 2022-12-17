@@ -11,7 +11,7 @@
             <img src="/public/upload/{{image.filename}}" class="img-fluid">
         </div>
     </div>
-    
+
 <!--Creamos el pie de foto con likes, visualizacion, etc-->
     <div class="card-footer d-flex justify-content-between align-items-center">
         <button class="btn btn-success" id="btn-like" data-id="{{image.filename}}">
@@ -42,7 +42,7 @@
     </div>
 
     <div class="card-body">
-        <blockquote>
+        <blockquote id="post-comment">
             <form action="/images/{{image.uniqueId}}/comment" method="post">
             <div class="form-group">
                 <input type="text" class="form-control" name="name" placeholder="Nombre">
@@ -60,5 +60,23 @@
             </div>
             </form>
         </blockquote>
+
+        <!--listamos los comentarios existentes debajo de la foto-->
+        <ul class="list-group p-4">
+            {{#each comments}}
+                <li class="list-group-item">
+                    <a href="#" class="col text-center">
+                        <!-- esta linea se encarga de poner la foto de usuario de gravatar, si no existe dicho usuario, pondrá una random-->
+                        <img src="http://gravatar.com/avatar/{{gravatar}}?d=monsterid&s=45" alt="">
+                    </a>
+                    <blockquote class="col">
+                        <p class="lead">{{<comment}}</p>
+                        <footer class="blockquote-footer">
+                            {{name}}-{{timeago timestamp}}
+                        </footer>
+                    </blockquote>
+                </li>
+            {{/each}}
+        </ul>
     </div>
 </div>

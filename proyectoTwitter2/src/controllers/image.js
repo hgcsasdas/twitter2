@@ -11,9 +11,22 @@ const image = require('../models/image');
 const ctrl = {}
 
 ctrl.index = async (req, res)=> {
+    //creamos un objeto viewmodel que se llenará con una imagen y sus comentarios
+    const viewModel = {image:{}, comments: {}};
+
+    //llenamos el viewmodel
     const image = await Image.findOne({_id: req.params.images_id}).lean();
-    console.log(image);
-    res.render('image', { image });
+    if(image){
+        image.views = image.views +1;
+        viewModel.image = image;
+        await image.save();
+        const comments = await Comment.find({images_id: image._id});
+        viewModel.comments = comments;
+        res.render('image', viewModel);
+    }else{
+        //si la imagen no existe, redirigimos a la pagina principal
+        res.redirect('/');
+    }
 };
 //Esta función lo que hace es tomar la imagen y procesarla y crearla en la bbdd
 ctrl.create = (req, res)=> {
@@ -56,11 +69,19 @@ ctrl.create = (req, res)=> {
     saveImage();
 };
 
-ctrl.like = (req, res)=> {
-    
+ctrl.like = async (req, res)=> {
+    await  Image.findOne({filename :{$regex: req.params.images_id}})
+    if(image){
+        image.likes = image.likes +1;
+        await image.save();
+        res.json({likes: image.likes});
+    }else{
+        res.status(500).json({error: 'Error interno'})
+    }
 };
 
 ctrl.comment = async  (req, res)=> {
+    //guardar comentarios
     const image = await Image.findOne({filename: {$regex: req.params.images_id}});
     if(image){
         const newComment = new Comment(req.body);
@@ -68,12 +89,21 @@ ctrl.comment = async  (req, res)=> {
         newComment.images_id = image.id;
         await newComment.save()
         res.redirect('/images/' + image.uniqueId);
+    }else{
+            //si el comentario no existe, redirigimos a la pagina principal
+        res.redirect('/');
     }
 
 };
 
-ctrl.remove = (req, res)=> {
-    
+ctrl.remove = async (req, res)=> {
+    Image.findOne({filename: {$regex: req.params.images_id}});
+    if(image){
+        await fs.unlink(path.resolve('./src/public/upload/' + image.filename));
+        await Comment.deleteOne({images_id: images_id});
+        await image.remove();
+        res.json(true)
+    }
 };
 
 module.exports = ctrl;
