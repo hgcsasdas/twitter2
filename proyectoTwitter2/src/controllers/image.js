@@ -1,10 +1,12 @@
 const path= require('path');
 const { randomizer } = require('../helpers/libs');
 const fs = require('fs-extra');
+const md5 = require('md5');
 
-const  { Image } = require('../models');
+const  { Image, Comment } = require('../models');
 const { url } = require('inspector');
 const { fstat } = require('fs');
+const image = require('../models/image');
 
 const ctrl = {}
 
@@ -43,7 +45,8 @@ ctrl.create = (req, res)=> {
                     description: req.body.description,
                 });
                 const imageSave = await newImg.save();
-                res.send('works');
+                res.redirect('/images/' + urlImg)
+                //res.send('works');
             }else{
                 await fs.unlink(imageTempPath);
                 res.status(500).json({error: 'Solo están permitidas imágenes'});
@@ -57,8 +60,16 @@ ctrl.like = (req, res)=> {
     
 };
 
-ctrl.comment = (req, res)=> {
-    
+ctrl.comment = async  (req, res)=> {
+    const image = await Image.findOne({filename: {$regex: req.params.images_id}});
+    if(image){
+        const newComment = new Comment(req.body);
+        newComment.gravatar = md5(newComment.email);
+        newComment.images_id = image.id;
+        await newComment.save()
+        res.redirect('/images/' + image.uniqueId);
+    }
+
 };
 
 ctrl.remove = (req, res)=> {
