@@ -7,20 +7,20 @@ const  { Image, Comment } = require('../models');
 const { url } = require('inspector');
 const { fstat } = require('fs');
 const image = require('../models/image');
+const { log } = require('console');
 
 const ctrl = {}
 
 ctrl.index = async (req, res)=> {
     //creamos un objeto viewmodel que se llenará con una imagen y sus comentarios
     const viewModel = {image:{}, comments: {}};
-
     //llenamos el viewmodel
     const image = await Image.findOne({_id: req.params.images_id}).lean();
     if(image){
         image.views = image.views +1;
         viewModel.image = image;
-        await image.save();
-        const comments = await Comment.find({images_id: image._id});
+        //await image.save();
+        const comments = await Comment.find({image_id: image._id}).lean();
         viewModel.comments = comments;
         res.render('image', viewModel);
     }else{
@@ -34,7 +34,6 @@ ctrl.create = (req, res)=> {
     const saveImage = async () => {
         //creamos un nombre aleatorio para la imagen
         const urlImg = randomizer();
-        console.log("Estoy dentro");
         //hacemos una comprobación de si ya existe esta "imagen"
         const images = await Image.find({filename: urlImg});
         if (images.length > 0) {
@@ -46,7 +45,7 @@ ctrl.create = (req, res)=> {
             //extensión del archivo
             const ext = path.extname(req.file.originalname).toLowerCase();
             //a donde queremos mover la imagen y la extensión
-            const targetPath = path.resolve(`src/public/upload/${urlImg}${ext}`);
+            const targetPath = path.resolve(`/public/upload/${urlImg}${ext}`);
         
             //con esto procesamos si la imagen tiene esta extensión, y si la tiene se empieza a procesar 
             if (ext === '.jpg' || ext === '.png' || ext === '.jpeg' || ext === '.gif'){
@@ -70,37 +69,41 @@ ctrl.create = (req, res)=> {
 };
 
 ctrl.like = async (req, res)=> {
-    await  Image.findOne({filename :{$regex: req.params.images_id}})
+    const image = await  Image.findOne({filename: req.params.image_id})
     if(image){
         image.likes = image.likes +1;
         await image.save();
         res.json({likes: image.likes});
+
+        res.redirect('/images/' + image._id);
+        return;
     }else{
         res.status(500).json({error: 'Error interno'})
     }
+
 };
 
 ctrl.comment = async  (req, res)=> {
     //guardar comentarios
-    const image = await Image.findOne({filename: {$regex: req.params.images_id}});
+    const image = await Image.findOne({_id: req.params.image_id}).lean();
     if(image){
         const newComment = new Comment(req.body);
         newComment.gravatar = md5(newComment.email);
-        newComment.images_id = image.id;
+        newComment.comment = req.body.coment;
+        newComment.image_id = image._id;
         await newComment.save()
-        res.redirect('/images/' + image.uniqueId);
+        res.redirect('/images/' + image._id);
     }else{
             //si el comentario no existe, redirigimos a la pagina principal
         res.redirect('/');
     }
-
 };
 
 ctrl.remove = async (req, res)=> {
-    Image.findOne({filename: {$regex: req.params.images_id}});
+    const image = await Image.findOne({filename: req.params.image_id});
     if(image){
         await fs.unlink(path.resolve('./src/public/upload/' + image.filename));
-        await Comment.deleteOne({images_id: images_id});
+        await Comment.deleteOne({image_id: image_id});
         await image.remove();
         res.json(true)
     }

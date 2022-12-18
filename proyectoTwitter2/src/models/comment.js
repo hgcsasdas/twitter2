@@ -1,4 +1,6 @@
-const {Schema, model } = require("mongoose");
+const {Schema, model } = require('mongoose');
+const mongoose = require('mongoose');
+
 const ObjectId = Schema.ObjectId;
 
 const CommentSchema = new Schema({

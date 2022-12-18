@@ -43,7 +43,7 @@
 
     <div class="card-body">
         <blockquote id="post-comment">
-            <form action="/images/{{image.uniqueId}}/comment" method="post">
+            <form action="/images/{{image._id}}/comment" method="POST">
             <div class="form-group">
                 <input type="text" class="form-control" name="name" placeholder="Nombre">
             </div>
@@ -70,7 +70,7 @@
                         <img src="http://gravatar.com/avatar/{{gravatar}}?d=monsterid&s=45" alt="">
                     </a>
                     <blockquote class="col">
-                        <p class="lead">{{<comment}}</p>
+                        <p class="lead">{{this.comment}}</p>
                         <footer class="blockquote-footer">
                             {{name}}-{{timeago timestamp}}
                         </footer>
@@ -80,3 +80,5 @@
         </ul>
     </div>
 </div>
+
+{{viewModel}}

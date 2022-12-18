@@ -1,6 +1,5 @@
 const path = require('path');
 const exphbs = require('express-handlebars');
-
 const morgan = require('morgan');
 const multer = require('multer');
 const express = require('express');
@@ -19,7 +18,9 @@ module.exports = app => {
         partialsDir: path.join(app.get('views'), 'partials'),
         layoutsDir: path.join(app.get('views'), 'layouts'),
         extname: '.hbs',
-        helpers: require('./helpers')
+        helpers: require('./helpers'),
+        runtimeOptions:{allowProtoPropertiesByDefault:true,
+            allowedProtoMethodsByDefault:true}
     }));
 
     app.set('view engine', '.hbs');

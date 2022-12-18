@@ -9,6 +9,7 @@
   "author": "hgc88",
   "license": "ISC",
   "dependencies": {
+    "@handlebars/allow-prototype-access": "^1.0.5",
     "errorhandler": "^1.5.1",
     "express": "^4.18.2",
     "express-handlebars": "^6.0.6",
@@ -20,6 +21,7 @@
     "urlencode": "^1.1.0"
   },
   "devDependencies": {
+    "handlebars": "^4.5.0",
     "nodemon": "^2.0.20"
   }
 }
