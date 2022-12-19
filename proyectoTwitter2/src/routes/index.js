@@ -8,9 +8,17 @@ const users = require('../controllers/users');
 module.exports = app =>{
 
     router.get('/', home.index);
-    router.get('/login', home.login);
-    router.get('/signup', home.signup);
+
+    router.get('/login', users.loginGo);
+    router.post('/login', users.login);
+/*router.post('/login', passport.authenticate('local', {
+        successRedirect: '/',
+        failureRedirect: '/login',
+    }));
+ */
+    router.get('/signup', users.signupGo);
     router.post('/signup', users.signup);
+
     router.get('/images/:images_id', image.index);
     router.post('/images', image.create);
     router.post('/images/:image_id/like', image.like);

@@ -5,11 +5,13 @@ const morgan = require('morgan');
 const multer = require('multer');
 const express = require('express');
 const routes = require('../routes/index');
+const session = require('express-session');
+const passport = require('passport');
 
 const { dirname } = require('path');
 const exp = require('constants');
 const errorHandler = require('errorhandler');
-
+require('../config/passport');
 module.exports = app => {
 
     app.set('port', process.env.PORT || 3000);
@@ -29,6 +31,13 @@ module.exports = app => {
     app.use(multer({dest: path.join(__dirname, '../public/upload/temp')}).single('image'));
     app.use(express.urlencoded({extended: false}));
     app.use(express.json());
+    app.use(session({
+        secret: 'mySecret',
+        resave: true,
+        saveUninitialized: true,
+    }));
+    app.use(passport.initialize());
+    app.use(passport.session());
 
     //routes
     routes(app);
