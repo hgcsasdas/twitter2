@@ -1,12 +1,16 @@
 const express = require('express');
 const router = express.Router();
 
-const home =   require('../controllers/home');
-const image =   require('../controllers/image');
+const home = require('../controllers/home');
+const image = require('../controllers/image');
+const users = require('../controllers/users');
 
 module.exports = app =>{
 
     router.get('/', home.index);
+    router.get('/login', home.login);
+    router.get('/signup', home.signup);
+    router.post('/signup', users.signup);
     router.get('/images/:images_id', image.index);
     router.post('/images', image.create);
     router.post('/images/:image_id/like', image.like);
