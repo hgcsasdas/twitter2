@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 
 const ObjectId = Schema.ObjectId;
 
+//creamos los campos del comentario
 const CommentSchema = new Schema({
     image_id: {type: ObjectId },
     email: { type: String},

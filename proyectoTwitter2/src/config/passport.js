@@ -1,7 +1,10 @@
+//libreria para iniciar sesion, no hemos sido capaces de implementarlo correctamente
+
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 
 const User = require('../models/user');
+
 
 passport.use(new LocalStrategy({
     usernameField: 'user'

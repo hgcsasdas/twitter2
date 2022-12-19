@@ -1,5 +1,6 @@
 const helpers = {};
 
+//creador de string aleatoria para la imagen
 helpers.randomizer = () =>{
     const posible = 'abcdefghijklmnopqrstuvwxyz0123456789';
     let stringAleatorio = 0;

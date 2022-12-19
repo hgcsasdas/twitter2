@@ -12,6 +12,8 @@ const { dirname } = require('path');
 const exp = require('constants');
 const errorHandler = require('errorhandler');
 require('../config/passport');
+
+//iniciar la aplicacion en un puerto empleando nodemon
 module.exports = app => {
 
     app.set('port', process.env.PORT || 3000);
@@ -39,13 +41,13 @@ module.exports = app => {
     app.use(passport.initialize());
     app.use(passport.session());
 
-    //routes
+    //rutas
     routes(app);
 
     //static files
     app.use('/public', express.static(path.join(__dirname, '../public')));
 
-    //erohandler
+    //errorhandler
     if ('development' === app.get('env')){
         app.use(errorHandler) 
     }

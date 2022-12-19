@@ -1,10 +1,11 @@
 $('#post-comment').hide();
-
+//mostrar el menu comentarios
 $('#btn-toggle-comment').click(e =>{
     e.preventDefault();
     $('#post-comment').slideToggle();
 })
 
+//boton like
 $('#btn-like').click(function(e){
     e.preventDefault();
     let imgId = $(this).data('id');
@@ -15,7 +16,7 @@ $('#btn-like').click(function(e){
         })
 })
 
-
+//boton borrar imagen, no esta implementado adecuadamente
 $('#btn-delete').click(function(e){
     e.preventDefault();
     let $this = $(this);
